@@ -19,10 +19,22 @@
             <param-name>services</param-name>
             <param-value>fi.helsinki.cs.tmc.comet.CometService</param-value>
         </init-param>
+        <load-on-startup>1</load-on-startup>
     </servlet>
+    
+    <servlet>
+        <servlet-name>publish</servlet-name>
+        <servlet-class>fi.helsinki.cs.tmc.comet.PublishServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>publish</servlet-name>
+        <url-pattern>/synchronous/publish</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>cometd</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
     
     <listener>

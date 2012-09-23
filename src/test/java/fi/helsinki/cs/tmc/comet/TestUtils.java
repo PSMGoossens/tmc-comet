@@ -3,6 +3,10 @@ package fi.helsinki.cs.tmc.comet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
+import org.cometd.bayeux.Channel;
+import org.cometd.bayeux.ChannelId;
 import org.cometd.bayeux.Message;
 import org.cometd.bayeux.client.ClientSession;
 import org.cometd.bayeux.client.ClientSessionChannel;
@@ -25,6 +29,10 @@ public class TestUtils {
 
     public static String getCometUrl() {
         return "http://localhost:" + getJettyPort() + "/";
+    }
+    
+    public static String getSynchronousPublishUrl() {
+        return "http://localhost:" + getJettyPort() + "/synchronous/publish";
     }
     
     public static String getAdminMsgChannel() {
@@ -122,5 +130,20 @@ public class TestUtils {
                 queue.add(message);
             }
         });
+    }
+    
+    public static void addAndCheckEnqueueingSubscription(final BlockingQueue<Message> queue, ClientSessionChannel channel) throws InterruptedException {
+        ClientSessionChannel subscriptionChannel = channel.getSession().getChannel(Channel.META_SUBSCRIBE);
+        BlockingQueue<Message> internalQueue = new LinkedBlockingDeque<Message>();
+        addEnqueueingListener(internalQueue, subscriptionChannel);
+        
+        addEnqueueingSubscription(queue, channel);
+        
+        Message msg = internalQueue.poll(3, TimeUnit.SECONDS);
+        if (msg == null) {
+            fail("No subscription success notification");
+        }
+        assertEquals(new ChannelId(Channel.META_SUBSCRIBE), msg.getChannelId());
+        assertTrue(msg.isSuccessful());
     }
 }

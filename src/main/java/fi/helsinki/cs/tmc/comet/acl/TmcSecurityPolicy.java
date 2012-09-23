@@ -27,7 +27,7 @@ public class TmcSecurityPolicy extends DefaultSecurityPolicy implements ServerSe
     
     @Override
     public boolean canHandshake(BayeuxServer server, ServerSession session, ServerMessage message) {
-        if (session.isLocalSession()) {
+        if (session.isLocalSession() && session.getLocalSession().getAttribute(SessionAttributes.AUTHENTICATE_THIS_LOCAL_SESSION) == null) {
             return true;
         }
         

@@ -20,7 +20,7 @@ Clients authenticate by sending an ext parameter `authentication` containing the
 
 ## Configuration and running ##
 
-TMC server includes the infrastructure for creating an initscript.
+Install an init script (for debian-based systems) using `initscripts/install.sh`.
 
 To run the server manually, do `mvn -Dfi.helsinki.cs.tmc.comet.configFile=/path/to/file.properties jetty:start`. The configuration file should not be world-readable and must have the following definitions.
 

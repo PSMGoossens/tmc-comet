@@ -1,0 +1,77 @@
+#!/bin/bash -e
+
+### BEGIN INIT INFO
+# Provides:             __NAME__
+# Required-Start:       $local_fs $remote_fs $network $syslog
+# Required-Stop:        $local_fs $remote_fs $network $syslog
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description:    Starts TMC's comet server.
+### END INIT INFO
+
+BASEDIR=__BASEDIR__
+LOG_FILE="$BASEDIR/daemon.log"
+HTTP_PORT=8080
+
+cd "$BASEDIR"
+
+isrunning() {
+  set +e
+  echo -n "" | nc localhost $HTTP_PORT
+  local STATUS=$?
+  set -e
+  return $STATUS
+}
+
+start() {
+  if isrunning; then
+    echo "HTTP server running at port $HTTP_PORT!"
+    exit 1
+  fi
+
+  echo -n "Starting jetty"
+  mvn jetty:start >> "$LOG_FILE" 2>&1 &
+  
+  # Wait until started
+  for i in `seq 1 15`; do
+    echo -n .
+    isrunning && echo && return
+    sleep 1
+  done
+  
+  echo
+  echo "Failed to start in 15 seconds. Check $LOG_FILE"
+  echo "If this is the first startup, it might take a while to download dependencies."
+  exit 1
+}
+
+stop() {
+  echo "Stopping jetty"
+  mvn jetty:stop >> "$LOG_FILE" 2>&1
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    stop
+    start
+    ;;
+  status)
+    if isrunning; then
+      echo "HTTP server running at port $HTTP_PORT"
+    else
+      echo "No HTTP server at port $HTTP_PORT"
+    fi
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status}"
+    exit 1
+    ;;
+esac
+
+exit 0

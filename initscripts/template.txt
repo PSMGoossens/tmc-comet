@@ -12,6 +12,7 @@
 BASEDIR=__BASEDIR__
 LOG_FILE="$BASEDIR/daemon.log"
 HTTP_PORT=8080
+RUN_AS=__USER__
 
 cd "$BASEDIR"
 
@@ -30,7 +31,7 @@ start() {
   fi
 
   echo -n "Starting jetty"
-  mvn jetty:start >> "$LOG_FILE" 2>&1 &
+  su -c 'mvn jetty:start >> '"$LOG_FILE"' 2>&1 &' "$RUN_AS"
   
   # Wait until started
   for i in `seq 1 15`; do
@@ -47,7 +48,7 @@ start() {
 
 stop() {
   echo "Stopping jetty"
-  mvn jetty:stop >> "$LOG_FILE" 2>&1
+  su -c 'mvn jetty:stop >> '"$LOG_FILE"' 2>&1' "$RUN_AS"
 }
 
 case "$1" in

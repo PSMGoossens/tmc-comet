@@ -78,7 +78,9 @@ public class Config {
             props.load(reader);
         } finally {
             try {
-                reader.close();
+                if (reader != null) {
+                    reader.close();
+                }
             } catch (IOException e) {
                 // Ignore
             }

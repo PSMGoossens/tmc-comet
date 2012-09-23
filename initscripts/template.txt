@@ -9,10 +9,11 @@
 # Short-Description:    Starts TMC's comet server.
 ### END INIT INFO
 
-BASEDIR=__BASEDIR__
+BASEDIR="__BASEDIR__"
 LOG_FILE="$BASEDIR/daemon.log"
-HTTP_PORT=__PORT__
-RUN_AS=__USER__
+HTTP_PORT="__PORT__"
+RUN_AS="__USER__"
+CONFIG_FILE="__CONFIG_FILE__"
 
 cd "$BASEDIR"
 
@@ -31,7 +32,7 @@ start() {
   fi
 
   echo -n "Starting jetty"
-  su -c 'mvn -Djetty.port='"$HTTP_PORT"' jetty:start >> '"$LOG_FILE"' 2>&1 &' "$RUN_AS"
+  su -c 'mvn -Dfi.helsinki.cs.tmc.comet.configFile='"$CONFIG_FILE"' -Djetty.port='"$HTTP_PORT"' jetty:start >> '"$LOG_FILE"' 2>&1 &' "$RUN_AS"
   
   # Wait until started
   for i in `seq 1 15`; do

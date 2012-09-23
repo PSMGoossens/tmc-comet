@@ -32,7 +32,7 @@ start() {
   fi
 
   echo -n "Starting jetty"
-  su -c 'mvn -Dfi.helsinki.cs.tmc.comet.configFile='"$CONFIG_FILE"' -Djetty.port='"$HTTP_PORT"' jetty:start >> '"$LOG_FILE"' 2>&1 &' "$RUN_AS"
+  su -c 'mvn -Dfi.helsinki.cs.tmc.comet.configFile='"$CONFIG_FILE"' -Djetty.port='"$HTTP_PORT"' jetty:deploy-war >> '"$LOG_FILE"' 2>&1 &' "$RUN_AS"
   
   # Wait until started
   for i in `seq 1 15`; do

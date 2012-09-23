@@ -33,6 +33,16 @@
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <overlays>
+                        <overlay />
+                        <overlay>
+                            <groupId>org.cometd.javascript</groupId>
+                            <artifactId>cometd-javascript-jquery</artifactId>
+                            <targetPath>/js</targetPath>
+                        </overlay>
+                    </overlays>
+                </configuration>
             </plugin>
             
             <plugin>
@@ -65,7 +75,7 @@
                         <id>start-jetty</id>
                         <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>start</goal>
+                            <goal>deploy-war</goal>
                         </goals>
                         <configuration>
                             <scanIntervalSeconds>0</scanIntervalSeconds>
@@ -152,6 +162,12 @@
                     <artifactId>cometd-java-client</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.cometd.javascript</groupId>
+            <artifactId>cometd-javascript-jquery</artifactId>
+            <version>${cometd.version}</version>
+            <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>

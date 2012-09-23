@@ -43,6 +43,10 @@ public class TestUtils {
         return "http://localhost:" + getAuthServerPort() + "/foo";
     }
     
+    public static String getJavascriptBaseUrl() {
+        return "http://localhost:" + getJettyPort() + "/js";
+    }
+    
     public static int getAuthServerPort() {
         return 8081;
     }

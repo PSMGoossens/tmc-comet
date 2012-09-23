@@ -13,12 +13,6 @@ import org.cometd.server.authorizer.GrantAuthorizer;
  */
 @Service
 public class CometService {
-    //TODO: /broadcast/tmc/global/admin-msg
-    //TODO: /broadcast/tmc/global/course-updated
-    //TODO: /broadcast/tmc/user/<username>/review-available (req authorization)
-    //TODO: document the above in a readme
-    //TODO: tests
-    
     @Configure("/broadcast/tmc/global/**")
     public void confGlobalChannels(ConfigurableServerChannel channel) {
         channel.setPersistent(true);

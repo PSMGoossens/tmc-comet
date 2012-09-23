@@ -34,7 +34,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>cometd</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/comet/*</url-pattern>
     </servlet-mapping>
     
     <listener>

@@ -28,7 +28,7 @@ public class TestUtils {
     }
 
     public static String getCometUrl() {
-        return "http://localhost:" + getJettyPort() + "/";
+        return "http://localhost:" + getJettyPort() + "/comet";
     }
     
     public static String getSynchronousPublishUrl() {

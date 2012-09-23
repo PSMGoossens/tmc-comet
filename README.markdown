@@ -20,7 +20,7 @@ Clients authenticate by sending an ext parameter `authentication` containing the
 
 ## Configuration and running ##
 
-Install an init script (for debian-based systems) using `initscripts/install.sh`.
+Install an init script (for debian-based systems) using `initscripts/install.sh [port]`. The port defaults to 8080.
 
 To run the server manually, do `mvn -Dfi.helsinki.cs.tmc.comet.configFile=/path/to/file.properties jetty:start`. The configuration file should not be world-readable and must have the following definitions.
 

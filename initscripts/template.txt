@@ -11,7 +11,7 @@
 
 BASEDIR=__BASEDIR__
 LOG_FILE="$BASEDIR/daemon.log"
-HTTP_PORT=8080
+HTTP_PORT=__PORT__
 RUN_AS=__USER__
 
 cd "$BASEDIR"
@@ -31,7 +31,7 @@ start() {
   fi
 
   echo -n "Starting jetty"
-  su -c 'mvn jetty:start >> '"$LOG_FILE"' 2>&1 &' "$RUN_AS"
+  su -c 'mvn -Djetty.port='"$HTTP_PORT"' jetty:start >> '"$LOG_FILE"' 2>&1 &' "$RUN_AS"
   
   # Wait until started
   for i in `seq 1 15`; do
@@ -42,13 +42,13 @@ start() {
   
   echo
   echo "Failed to start in 15 seconds. Check $LOG_FILE"
-  echo "If this is the first startup, it might take a while to download dependencies."
+  echo "If this is the first startup, the server may start after dependencies have been downloaded."
   exit 1
 }
 
 stop() {
   echo "Stopping jetty"
-  su -c 'mvn jetty:stop >> '"$LOG_FILE"' 2>&1' "$RUN_AS"
+  su -c 'mvn -Djetty.port='"$HTTP_PORT"' jetty:stop >> '"$LOG_FILE"' 2>&1' "$RUN_AS"
 }
 
 case "$1" in

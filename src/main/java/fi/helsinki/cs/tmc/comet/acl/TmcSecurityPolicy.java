@@ -102,6 +102,11 @@ public class TmcSecurityPolicy extends DefaultSecurityPolicy implements ServerSe
             data += "&session_id=" + Resty.enc(sessionId);
         }
         FormContent formContent = Resty.form(data);
+        
+        // Can't use text() since then Resty puts text/html before text/plain
+        // in the Accept header and Rails insists on serving HTML to it,
+        // despite the URL ending in '.text'.
+        // Resty's header modification API won't let us override this (v0.3.1).
         String response = new Resty().text(authUrl, formContent).toString().trim();
         return response.equals("OK");
     }

@@ -18,12 +18,15 @@ import org.cometd.bayeux.client.ClientSessionChannel;
 import org.cometd.bayeux.server.BayeuxServer;
 import org.cometd.bayeux.server.LocalSession;
 import org.eclipse.jetty.util.ajax.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides a simple synchronous HTTP interface for publishing messages.
  * This way, the backend doesn't need to implement Bayeux.
  */
 public class PublishServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(PublishServlet.class);
     
     private BayeuxServer server;
 
@@ -35,6 +38,14 @@ public class PublishServlet extends HttpServlet {
     
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            doPostImpl(req, resp);
+        } catch (Exception e) {
+            log.error("POST request failed", e);
+        }
+    }
+    
+    private void doPostImpl(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String channel = req.getParameter("channel");
         String data = req.getParameter("data");
         
@@ -90,7 +101,9 @@ public class PublishServlet extends HttpServlet {
         if (success.get()) {
             respondWith(resp, SC_OK, "OK");
         } else {
-            respondWith(resp, SC_INTERNAL_SERVER_ERROR, "Failed to publish message: " + error.get());
+            String msg = "Failed to publish message: " + error.get();
+            log.info(msg);
+            respondWith(resp, SC_INTERNAL_SERVER_ERROR, msg);
         }
     }
     

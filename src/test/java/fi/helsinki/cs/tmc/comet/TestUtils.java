@@ -18,6 +18,7 @@ import static org.junit.Assert.*;
 public class TestUtils {
     public static final String TEST_USER = "test_user";
     public static final String TEST_PASSWORD = "test_password";
+    public static final String TEST_SESSION_ID = "test_session_id";
     
     public static String getJettyPort() {
         return System.getProperty("jetty.port");
@@ -56,7 +57,6 @@ public class TestUtils {
         BayeuxClient client = createClient();
         client.addExtension(getAuthenticationExtension(getFrontendAuthFields()));
         doHandshake(client);
-        
         return client;
     }
     
@@ -64,14 +64,12 @@ public class TestUtils {
         BayeuxClient client = createClient();
         client.addExtension(getAuthenticationExtension(getBackendAuthFields()));
         doHandshake(client);
-        
         return client;
     }
     
-    private static BayeuxClient createClient() {
+    public static BayeuxClient createClient() {
         Map<String, Object> transportOpts = new HashMap<String, Object>();
         WebSocketTransport transport = WebSocketTransport.create(transportOpts, new WebSocketClientFactory());
-        
         return new BayeuxClient(getCometUrl(), transport);
     }
 
@@ -82,7 +80,7 @@ public class TestUtils {
         }
     }
     
-    private static ClientSession.Extension getAuthenticationExtension(final Map<String, Object> fields) {
+    public static ClientSession.Extension getAuthenticationExtension(final Map<String, Object> fields) {
         return new ClientSession.Extension() {
             public boolean rcv(ClientSession session, Message.Mutable message) {
                 return true;

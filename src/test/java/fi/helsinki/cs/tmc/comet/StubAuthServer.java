@@ -2,7 +2,9 @@ package fi.helsinki.cs.tmc.comet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
 public class StubAuthServer {
     private final int port;
     private final Set<StubUser> users;
+    private final Map<String, StubUser> sessionIdToUser;
     private Server server;
     
     private static class StubUser {
@@ -51,32 +54,60 @@ public class StubAuthServer {
     public StubAuthServer(int port) throws Exception {
         this.port = port;
         this.users = new HashSet<StubUser>();
+        this.sessionIdToUser = new HashMap<String, StubUser>();
         this.server = new Server(port);
         server.setHandler(handler);
         server.start();
     }
     
-    public void addUser(String username, String password) {
-        synchronized (users) {
-            users.add(new StubUser(username, password));
+    public synchronized void addUser(String username, String password) {
+        users.add(new StubUser(username, password));
+    }
+    
+    public synchronized void addSession(String username, String sessionId) {
+        for (StubUser user : users) {
+            if (user.username.equals(username)) {
+                sessionIdToUser.put(sessionId, user);
+                break;
+            }
         }
+    }
+    
+    public synchronized boolean userExists(String username, String password) {
+        return users.contains(new StubUser(username, password));
+    }
+    
+    public synchronized boolean sessionIsValid(String username, String sessionId) {
+        StubUser user = null;
+        for (StubUser candidate : users) {
+            if (candidate.username.equals(username)) {
+                user = candidate;
+                break;
+            }
+        }
+        
+        return user.equals(sessionIdToUser.get(sessionId));
     }
     
     private Handler handler = new AbstractHandler() {
         public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
             String pathInfo = baseRequest.getPathInfo();
             if (baseRequest.getPathInfo() != null && pathInfo.equals("/foo/auth.text")) {
-                response.setContentType("text/plain; charset=utf-8");
-                PrintWriter w = response.getWriter();
-                boolean userOk;
-                synchronized (users) {
-                    userOk = users.contains(new StubUser(request.getParameter("username"), request.getParameter("password")));
+                boolean userOk = false;
+                
+                if (request.getParameter("password") != null) {
+                    userOk = userExists(request.getParameter("username"), request.getParameter("password"));
+                } else if (request.getParameter("sessionId") != null) {
+                    userOk = sessionIsValid(request.getParameter("username"), request.getParameter("sessionId"));
                 }
+                
+                response.setContentType("text/plain; charset=utf-8");
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setStatus(HttpServletResponse.SC_OK);
+                PrintWriter w = response.getWriter();
                 if (userOk) {
-                    response.setStatus(HttpServletResponse.SC_OK);
                     w.println("OK");
                 } else {
-                    response.setStatus(HttpServletResponse.SC_OK);
                     w.println("FAIL");
                 }
                 w.close();

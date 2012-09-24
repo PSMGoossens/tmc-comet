@@ -47,16 +47,17 @@ public class TmcSecurityPolicy extends DefaultSecurityPolicy implements ServerSe
         String serverBaseUrl = getString(authData, "serverBaseUrl");
         String username = getString(authData, "username");
         String password = getString(authData, "password");
+        String sessionId = getString(authData, "sessionId");
         String backendKey = getString(authData, "backendKey");
         
-        if (serverBaseUrl != null && username != null && password != null) {
+        if (serverBaseUrl != null && username != null && (password != null || sessionId != null)) {
             try {
-                if (authenticateFrontend(serverBaseUrl, username, password)) {
+                if (authenticateFrontend(serverBaseUrl, username, password, sessionId)) {
                     session.setAttribute(SessionAttributes.SERVER_BASE_URL, serverBaseUrl);
                     session.setAttribute(SessionAttributes.USERNAME, username);
                     return true;
                 } else {
-                    log.info("Handshake denied: invalid username, password or serverBaseUrl");
+                    log.info("Handshake denied: invalid username, password/sessionId or serverBaseUrl");
                     return false;
                 }
             } catch (IOException e) {
@@ -87,15 +88,21 @@ public class TmcSecurityPolicy extends DefaultSecurityPolicy implements ServerSe
         }
     }
     
-    private boolean authenticateFrontend(String serverBaseUrl, String username, String password) throws IOException {
+    private boolean authenticateFrontend(String serverBaseUrl, String username, String password, String sessionId) throws IOException {
         if (!config.isAllowedServer(serverBaseUrl)) {
             log.info("Attempt to use unknown authentication server: " + serverBaseUrl);
             return false;
         }
         
         String authUrl = config.normalizeServerUrl(serverBaseUrl) + "/auth.text";
-        FormContent data = Resty.form("username=" + Resty.enc(username) + "&password=" + Resty.enc(password));
-        String response = new Resty().text(authUrl, data).toString().trim();
+        String data = "username=" + Resty.enc(username);
+        if (password != null) {
+            data += "&password=" + Resty.enc(password);
+        } else {
+            data += "&sessionId=" + Resty.enc(sessionId);
+        }
+        FormContent formContent = Resty.form(data);
+        String response = new Resty().text(authUrl, formContent).toString().trim();
         return response.equals("OK");
     }
     

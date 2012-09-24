@@ -18,7 +18,8 @@ public class AbstractTmcCometTest {
     @Before
     public void setUpAuthServer() throws Exception {
         authServer = new StubAuthServer(TestUtils.getAuthServerPort());
-        authServer.addUser("test_user", "test_password");
+        authServer.addUser(TestUtils.TEST_USER, TestUtils.TEST_PASSWORD);
+        authServer.addSession("test_user", TestUtils.TEST_SESSION_ID);
     }
     
     @After

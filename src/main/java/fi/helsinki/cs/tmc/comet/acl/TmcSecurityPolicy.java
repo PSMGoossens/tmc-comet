@@ -99,7 +99,7 @@ public class TmcSecurityPolicy extends DefaultSecurityPolicy implements ServerSe
         if (password != null) {
             data += "&password=" + Resty.enc(password);
         } else {
-            data += "&sessionId=" + Resty.enc(sessionId);
+            data += "&session_id=" + Resty.enc(sessionId);
         }
         FormContent formContent = Resty.form(data);
         String response = new Resty().text(authUrl, formContent).toString().trim();

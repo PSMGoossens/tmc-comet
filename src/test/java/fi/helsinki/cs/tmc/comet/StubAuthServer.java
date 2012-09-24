@@ -95,10 +95,14 @@ public class StubAuthServer {
             if (baseRequest.getPathInfo() != null && pathInfo.equals("/foo/auth.text")) {
                 boolean userOk = false;
                 
-                if (request.getParameter("password") != null) {
-                    userOk = userExists(request.getParameter("username"), request.getParameter("password"));
-                } else if (request.getParameter("sessionId") != null) {
-                    userOk = sessionIsValid(request.getParameter("username"), request.getParameter("sessionId"));
+                String username = request.getParameter("username");
+                String password = request.getParameter("password");
+                String sessionId = request.getParameter("session_id");
+                
+                if (password != null) {
+                    userOk = userExists(username, password);
+                } else if (sessionId != null) {
+                    userOk = sessionIsValid(username, sessionId);
                 }
                 
                 response.setContentType("text/plain; charset=utf-8");

@@ -14,7 +14,7 @@ Cometd's implementation of Bayeux is used as the transport. The following channe
     - Message payload: a string containing the name of the course.
 - `/broadcast/tmc/user/<username>/review-available`
     - Published when a review is available. The client should check the server for new reviews.
-    - Message payload: none.
+    - Message payload: `{exercise_name: '...', url: '<url to view review as HTML>'}`.
 
 Clients authenticate by sending an ext parameter `authentication` containing the fields `username`, `password` and `serverBaseUrl` during handshake. Backends authorize by sending `backendKey` and `serverBaseUrl`. In both cases, `serverBaseUrl` should point to a TMC server instance. A fixed list of allowed server base URLs must be configured.
 

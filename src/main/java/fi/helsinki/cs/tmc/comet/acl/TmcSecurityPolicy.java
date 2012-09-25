@@ -57,11 +57,11 @@ public class TmcSecurityPolicy extends DefaultSecurityPolicy implements ServerSe
                     session.setAttribute(SessionAttributes.USERNAME, username);
                     return true;
                 } else {
-                    log.info("Handshake denied: invalid username, password/sessionId or serverBaseUrl");
+                    log.info("Handshake denied for '" + username + "': invalid username, password/sessionId or serverBaseUrl");
                     return false;
                 }
             } catch (IOException e) {
-                log.error("Failed to authenticate at " + serverBaseUrl + ": " + e.toString());
+                log.error("Failed to authenticate '" + username + "' at " + serverBaseUrl + ": " + e.toString());
                 return false;
             }
         } else if (backendKey != null && serverBaseUrl != null) {

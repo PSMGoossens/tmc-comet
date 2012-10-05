@@ -92,7 +92,7 @@ public class StubAuthServer {
     private Handler handler = new AbstractHandler() {
         public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
             String pathInfo = baseRequest.getPathInfo();
-            if (baseRequest.getPathInfo() != null && pathInfo.equals("/foo/auth.text")) {
+            if (pathInfo != null && pathInfo.endsWith("/auth.text")) {
                 boolean userOk = false;
                 
                 String username = request.getParameter("username");

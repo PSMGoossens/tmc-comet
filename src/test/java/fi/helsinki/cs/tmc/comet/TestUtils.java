@@ -1,5 +1,6 @@
 package fi.helsinki.cs.tmc.comet;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -43,6 +44,9 @@ public class TestUtils {
     public static String getAuthServerBaseUrl() {
         return "http://localhost:" + getAuthServerPort() + "/foo";
     }
+    public static String getAnotherAuthServerBaseUrl() {
+        return "http://localhost:" + getAuthServerPort() + "/bar";
+    }
     
     public static String getJavascriptBaseUrl() {
         return "http://localhost:" + getJettyPort() + "/js";
@@ -54,8 +58,29 @@ public class TestUtils {
     
 
     public static BayeuxClient connectAsFrontend() {
+        return connectAsFrontend(getFrontendAuthFields());
+    }
+    
+    public static BayeuxClient connectAsFrontend(Map<String, Object> authFields) {
         BayeuxClient client = createClient();
-        client.addExtension(getAuthenticationExtension(getFrontendAuthFields()));
+        client.addExtension(getAuthenticationExtension(authFields));
+        doHandshake(client);
+        return client;
+    }
+    
+    public static BayeuxClient connectAsFrontend(String username, String password) {
+        return connectAsFrontend(username, password, TestUtils.getAuthServerBaseUrl());
+    }
+    
+    public static BayeuxClient connectAsFrontend(String username, String password, String authServerBaseUrl) {
+        Map<String, Object> authFields = ImmutableMap.of(
+                "username", (Object)username,
+                "password", password,
+                "serverBaseUrl", authServerBaseUrl
+                );
+        
+        BayeuxClient client = createClient();
+        client.addExtension(getAuthenticationExtension(authFields));
         doHandshake(client);
         return client;
     }

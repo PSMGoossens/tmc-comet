@@ -17,7 +17,11 @@
         </init-param>
         <init-param>
             <param-name>services</param-name>
-            <param-value>fi.helsinki.cs.tmc.comet.CometService</param-value>
+            <param-value>
+                fi.helsinki.cs.tmc.comet.GlobalChannelsService,
+                fi.helsinki.cs.tmc.comet.UserChannelsService,
+                fi.helsinki.cs.tmc.comet.PagePresenceService
+            </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>

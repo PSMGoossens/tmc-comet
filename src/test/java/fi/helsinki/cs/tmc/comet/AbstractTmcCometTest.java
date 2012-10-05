@@ -13,7 +13,7 @@ import org.junit.Before;
 import static org.junit.Assert.*;
 
 public class AbstractTmcCometTest {
-    private StubAuthServer authServer;
+    protected StubAuthServer authServer;
     
     @Before
     public void setUpAuthServer() throws Exception {

@@ -9,7 +9,7 @@ import org.cometd.bayeux.server.ConfigurableServerChannel;
 import org.cometd.server.authorizer.GrantAuthorizer;
 
 /**
- * Configures frontent channels.
+ * Configures frontend channels.
  */
 @Service
 public class CometService {
@@ -23,7 +23,7 @@ public class CometService {
     
     @Configure("/broadcast/tmc/user/**")
     public void confUserChannels(ConfigurableServerChannel channel) {
-        channel.setPersistent(true);
+        channel.setPersistent(false);
         channel.addAuthorizer(new RequireUserOwnsChannel());
         channel.addAuthorizer(new DenyPublishIfNotBackend());
         channel.addAuthorizer(GrantAuthorizer.GRANT_ALL);

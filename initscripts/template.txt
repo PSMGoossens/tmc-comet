@@ -19,7 +19,7 @@ cd "$BASEDIR"
 
 isrunning() {
   set +e
-  echo -n "" | nc localhost $HTTP_PORT
+  nc -z localhost $HTTP_PORT
   local STATUS=$?
   set -e
   return $STATUS

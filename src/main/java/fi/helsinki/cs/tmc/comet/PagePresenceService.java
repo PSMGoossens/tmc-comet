@@ -14,6 +14,7 @@ import org.cometd.bayeux.ChannelId;
 import org.cometd.bayeux.server.BayeuxServer;
 import org.cometd.bayeux.server.ConfigurableServerChannel;
 import org.cometd.bayeux.server.ServerChannel;
+import org.cometd.bayeux.server.ServerMessage;
 import org.cometd.bayeux.server.ServerSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +103,7 @@ public class PagePresenceService {
     
     private BayeuxServer.SubscriptionListener subListener = new BayeuxServer.SubscriptionListener() {
         @Override
-        public void subscribed(ServerSession session, ServerChannel channel) {
+        public void subscribed(ServerSession session, ServerChannel channel, ServerMessage message) {
             if (!channelMatches(channel)) {
                 return;
             }
@@ -118,7 +119,7 @@ public class PagePresenceService {
         }
 
         @Override
-        public void unsubscribed(ServerSession session, ServerChannel channel) {
+        public void unsubscribed(ServerSession session, ServerChannel channel, ServerMessage message) {
             if (!channelMatches(channel)) {
                 return;
             }
@@ -159,7 +160,7 @@ public class PagePresenceService {
         private void notifySubscribers(String pageName, ServerSession session, ServerChannel channel) {
             Set<String> users = registry.get(pageName);
             Object data = ImmutableMap.of("users", users);
-            channel.publish(session, data, null);
+            channel.publish(session, data);
         }
     };
 }

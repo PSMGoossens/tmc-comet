@@ -12,8 +12,8 @@ import org.cometd.bayeux.Message;
 import org.cometd.bayeux.client.ClientSession;
 import org.cometd.bayeux.client.ClientSessionChannel;
 import org.cometd.client.BayeuxClient;
+import org.cometd.client.transport.ClientTransport;
 import org.cometd.websocket.client.WebSocketTransport;
-import org.eclipse.jetty.websocket.WebSocketClientFactory;
 import static org.junit.Assert.*;
 
 public class TestUtils {
@@ -94,7 +94,7 @@ public class TestUtils {
     
     public static BayeuxClient createClient() {
         Map<String, Object> transportOpts = new HashMap<String, Object>();
-        WebSocketTransport transport = WebSocketTransport.create(transportOpts, new WebSocketClientFactory());
+        ClientTransport transport = new WebSocketTransport.Factory().newClientTransport(getCometUrl(), transportOpts);
         return new BayeuxClient(getCometUrl(), transport);
     }
 

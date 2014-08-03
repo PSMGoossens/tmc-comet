@@ -1,3 +1,4 @@
-/target
+/tmc-comet-server/target
+/tmc-comet/target
 /daemon.log
 /config.properties

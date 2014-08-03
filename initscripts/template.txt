@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 ### BEGIN INIT INFO
 # Provides:             __NAME__
@@ -9,47 +9,48 @@
 # Short-Description:    Starts TMC's comet server.
 ### END INIT INFO
 
+. /lib/lsb/init-functions
+
 BASEDIR="__BASEDIR__"
+START_SCRIPT="$BASEDIR/tmc-comet-server.sh"
 LOG_FILE="$BASEDIR/daemon.log"
-HTTP_PORT="__PORT__"
 RUN_AS="__USER__"
 CONFIG_FILE="__CONFIG_FILE__"
+PIDFILE="/var/run/tmc-comet.pid"
 
 cd "$BASEDIR"
 
-isrunning() {
-  set +e
-  nc -z localhost $HTTP_PORT
-  local STATUS=$?
-  set -e
-  return $STATUS
-}
-
 start() {
-  if isrunning; then
-    echo "HTTP server running at port $HTTP_PORT!"
+  start-stop-daemon --pidfile "$PIDFILE" --make-pidfile --background --startas "$START_SCRIPT" --start -- "$CONFIG_FILE" "$RUN_AS" "$LOG_FILE"
+  local STATUS=$?
+  if [ $STATUS = 0 ]; then
+    log_success_msg "Started tmc-comet"
+  else
+    log_failure_msg "Failed to start tmc-comet"
     exit 1
   fi
-
-  echo -n "Starting jetty"
-  su -c 'mvn -Dfi.helsinki.cs.tmc.comet.configFile='"$CONFIG_FILE"' -Djetty.port='"$HTTP_PORT"' jetty:deploy-war >> '"$LOG_FILE"' 2>&1 &' "$RUN_AS"
-  
-  # Wait until started
-  for i in `seq 1 15`; do
-    echo -n .
-    isrunning && echo && return
-    sleep 1
-  done
-  
-  echo
-  echo "Failed to start in 15 seconds. Check $LOG_FILE"
-  echo "If this is the first startup, the server may start after dependencies have been downloaded."
-  exit 1
 }
 
 stop() {
-  echo "Stopping jetty"
-  su -c 'mvn -Djetty.port='"$HTTP_PORT"' jetty:stop >> '"$LOG_FILE"' 2>&1' "$RUN_AS"
+  start-stop-daemon --pidfile "$PIDFILE" --stop
+  local STATUS=$?
+  if [ $STATUS = 0 ]; then
+    rm -f "$PIDFILE"
+    log_success_msg "Stopped tmc-comet"
+  else
+    log_failure_msg "Failed to stop tmc-comet"
+  fi
+}
+
+status() {
+  start-stop-daemon --pidfile "$PIDFILE" --status
+  local STATUS=$?
+  if [ $STATUS = 0 ]; then
+    echo "running"
+  else
+    echo "not running"
+    exit $STATUS
+  fi
 }
 
 case "$1" in
@@ -64,11 +65,7 @@ case "$1" in
     start
     ;;
   status)
-    if isrunning; then
-      echo "HTTP server running at port $HTTP_PORT"
-    else
-      echo "No HTTP server at port $HTTP_PORT"
-    fi
+    status
     ;;
   *)
     echo "Usage: $0 {start|stop|restart|status}"

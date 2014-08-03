@@ -20,9 +20,15 @@ Clients authenticate by sending an ext parameter `authentication` containing the
 
 ## Configuration and running ##
 
-Install an init script (for debian-based systems) using `initscripts/install.sh [port]`. The port defaults to 8080.
+First, compile everything by doing `mvn install`.
 
-To run the server manually, do `mvn -Dfi.helsinki.cs.tmc.comet.configFile=/path/to/file.properties jetty:start`. The configuration file should not be world-readable and must have the following definitions.
+Install an init script (for debian-based systems) using `initscripts/install.sh`.
+
+To run the server manually, do `./tmc-comet-server.sh /path/to/file.properties`. The configuration file should not be world-readable and must have at least the following definitions.
 
 - `fi.helsinki.cs.tmc.comet.backendKey` a secret that all backend servers use to authenticate when publishing messages.
 - `fi.helsinki.cs.tmc.comet.allowedServers` a semicolon-separated list of server base URLs that are accepted and authenticated against. Terminating slashes don't matter.
+
+See `tmc-comet-server/src/main/java/.../ServerMain.java` for additional settings.
+
+Integration tests can be run by doing `mvn integration-test`.

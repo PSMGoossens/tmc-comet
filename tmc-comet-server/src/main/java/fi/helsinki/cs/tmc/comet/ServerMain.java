@@ -111,7 +111,6 @@ public class ServerMain {
 
         ServerConnector connector = new ServerConnector(server, contextFactory);
         connector.setPort(settings.httpsPort);
-//connector.setHost("localhost");
         server.addConnector(connector);
     }
 

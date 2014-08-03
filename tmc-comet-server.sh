@@ -12,7 +12,7 @@ if [ -n "$LOG_FILE" ]; then
 fi
 
 if [ -n "$RUN_AS" ]; then
-  COMMAND=$(printf 'sudo --non-interactive -u "%q" %s' "$RUN_AS" "$COMMAND")
+  COMMAND=$(printf 'sudo -n -u "%q" %s' "$RUN_AS" "$COMMAND")
 fi
 
 exec /bin/sh -c "exec $COMMAND"

@@ -53,7 +53,7 @@ public class TestUtils {
     }
     
     public static int getAuthServerPort() {
-        return 8081;
+        return 8089;
     }
     
 

@@ -19,7 +19,7 @@
     <properties>
         <jetty.port>8088</jetty.port>
         <fi.helsinki.cs.tmc.comet.backendKey.test>fakeBackendKey</fi.helsinki.cs.tmc.comet.backendKey.test>
-        <fi.helsinki.cs.tmc.comet.allowedServers.test>http://localhost:8081/foo/;http://localhost:8081/bar/</fi.helsinki.cs.tmc.comet.allowedServers.test>
+        <fi.helsinki.cs.tmc.comet.allowedServers.test>http://localhost:8089/foo/;http://localhost:8089/bar/</fi.helsinki.cs.tmc.comet.allowedServers.test>
     </properties>
 
     <licenses>

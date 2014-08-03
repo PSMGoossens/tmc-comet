@@ -9,7 +9,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <name>TMC Comet support</name>
+    <name>TMC Comet parent project</name>
     <description></description>
     <groupId>fi.helsinki.cs.tmc</groupId>
     <artifactId>tmc-comet-parent</artifactId>

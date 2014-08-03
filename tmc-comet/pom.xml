@@ -17,7 +17,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <jetty.port>8080</jetty.port>
+        <jetty.port>8088</jetty.port>
         <fi.helsinki.cs.tmc.comet.backendKey.test>fakeBackendKey</fi.helsinki.cs.tmc.comet.backendKey.test>
         <fi.helsinki.cs.tmc.comet.allowedServers.test>http://localhost:8081/foo/;http://localhost:8081/bar/</fi.helsinki.cs.tmc.comet.allowedServers.test>
     </properties>
@@ -65,11 +65,7 @@
                         </systemProperty>
                     </systemProperties>
 
-                    <connectors>
-                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                            <port>${jetty.port}</port>
-                        </connector>
-                    </connectors>
+                    <jettyXml>${project.basedir}/jetty-for-tests.xml</jettyXml>
                 </configuration>
                 
                 <executions>

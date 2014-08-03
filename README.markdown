@@ -31,4 +31,4 @@ To run the server manually, do `./tmc-comet-server.sh /path/to/file.properties`.
 
 See `tmc-comet-server/src/main/java/.../ServerMain.java` for additional settings.
 
-Integration tests can be run by doing `mvn integration-test`.
+Integration tests can be run by doing `mvn verify`.

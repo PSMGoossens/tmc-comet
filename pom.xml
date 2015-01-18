@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.cometd</groupId>
         <artifactId>cometd-project</artifactId>
-        <version>3.0.0</version>
+        <version>3.0.3</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -17,7 +17,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <cometd.version>3.0.0</cometd.version>
+        <cometd.version>3.0.3</cometd.version>
         <aether.version>1.0.0.v20140518</aether.version>
     </properties>
 

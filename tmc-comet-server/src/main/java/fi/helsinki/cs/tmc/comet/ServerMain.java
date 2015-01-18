@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Properties;
+import javax.servlet.ServletException;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
@@ -114,7 +115,7 @@ public class ServerMain {
         server.addConnector(connector);
     }
 
-    private void setUpWebapp(String warFile) throws IOException {
+    private void setUpWebapp(String warFile) throws IOException, ServletException {
         WebAppContext ctx = new WebAppContext();
         ctx.setContextPath(settings.contextPath);
         ctx.setWar(warFile);
